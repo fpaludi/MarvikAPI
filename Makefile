@@ -4,7 +4,7 @@ RED=\033[0;31m
 GREEN=\033[0;32m
 NC=\033[0m
 
-# Network name (default: booksapi)
+# Network name (default: marvikapi)
 NETWORK?=marvikapi
 export NETWORK_NAME=$(NETWORK)
 NETWORKS=$(shell docker network ls --filter name=^${NETWORK_NAME} --format="{{ .Name }}")
@@ -38,19 +38,8 @@ build_dev: create_network
 run_dev:
 	$(DEV_COMPOSE_CMD) up -d
 
-run_tests: run_dev
-	$(DEV_COMPOSE_CMD) exec api pytest tests/ -vv -s \
-	--cov src/ \
-	--cov-report html --cov-report term
-
-run_api: run
-	$(PROD_COMPOSE_CMD) exec api /start-reload.sh
-
 stop:
 	$(PROD_COMPOSE_CMD) down --remove-orphans
-
-stop_dev:
-	$(DEV_COMPOSE_CMD) down --remove-orphans
 
 start_project:
 	@printf '${GREEN} Installing, creating and activiting virtualenv... ${NC}\n';
